@@ -1,6 +1,7 @@
-from django.urls import path
+from rest_framework.routers import DefaultRouter
 
+from .views import UserViewSet
 
-urlpatterns = [
-    # path('account/', include('account.urls')),
-]
+router = DefaultRouter()
+router.register(r'account', UserViewSet)
+urlpatterns = router.urls
