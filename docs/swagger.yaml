@@ -1,0 +1,200 @@
+swagger: "2.0"
+info:
+  description: "Сервис работы с аккаунтами пользователей (регистрация, сброс пароля, подтверждение аккаунта и т.д."
+  version: "1.0.0"
+  title: "Account Management Service "
+  contact:
+    url: "https://github.com/TonyHikas"
+    name: "GitHub Account"
+
+schemes:
+- "https"
+paths:
+  /account/register:
+    post:
+      tags:
+      - "Account"
+      summary: "Регистрация"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+            password:
+              type: "string"
+            
+      responses:
+        200:
+          description: OK
+      
+          
+  /account/auth:
+    post:
+      tags:
+      - "Account"
+      summary: "Логин"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+            password:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/reset_password_key:
+    post:
+      tags:
+      - "Account"
+      summary: "Запрос ключа для сброса пароля"
+      description: "" 
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/reset_password:
+    post:
+      tags:
+      - "Account"
+      summary: "Сброс пароля"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+            key:
+              type: "string"
+            new_password:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/reset_email_key:
+    post:
+      tags:
+      - "Account"
+      summary: "Запрос ключа для смены email"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/reset_email:
+    post:
+      tags:
+      - "Account"
+      summary: "Смена email"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+            key:
+              type: "string"
+            new_email:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/confirm_key:
+    post:
+      tags:
+      - "Account"
+      summary: "Запрос ключа для подтверждения аккаунта"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/confirm:
+    post:
+      tags:
+      - "Account"
+      summary: "Подтверждение аккаунта"
+      description: ""
+      parameters:
+      - in: "body"
+        name: "body"
+        required: true
+        schema:
+          type: "object"
+          properties:
+            email:
+              type: "string"
+            key:
+              type: "string"
+      responses:
+        200:
+          description: OK
+          
+  /account/info:
+    post:
+      tags:
+      - "Account"
+      summary: "Информация о пользователе"
+      description: "" 
+      responses:
+        200:
+          description: OK
+          
+  /account/admin_stat:
+    get:
+      tags:
+      - "Account"
+      summary: "Статистика о кол-ве регистраций"
+      description: "" 
+      responses:
+        200:
+          description: OK
+    
