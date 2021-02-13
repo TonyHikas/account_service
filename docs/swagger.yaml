@@ -27,12 +27,32 @@ paths:
               type: "string"
             password:
               type: "string"
-            
+
       responses:
-        200:
-          description: OK
-      
-          
+        201:
+          description: Created
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Enter a valid email address."
+              password:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Пароль должен состоять из 8 латинских символов, содержать как мининум 1 заглавную букву и 1 цифру"
   /account/auth:
     post:
       tags:
@@ -53,13 +73,35 @@ paths:
       responses:
         200:
           description: OK
-          
+          schema:
+            type: "object"
+            properties:
+              token:
+                type: "string"
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Enter a valid email address."
+              error:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Неправильный email или пароль"
+
   /account/reset_password_key:
     post:
       tags:
       - "Account"
       summary: "Запрос ключа для сброса пароля"
-      description: "" 
+      description: ""
       parameters:
       - in: "body"
         name: "body"
@@ -72,7 +114,13 @@ paths:
       responses:
         200:
           description: OK
-          
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            $ref: '#/definitions/EmailError'
+        429:
+          description: "Запрос можно отправлять не чаще 1 раза в минуту"
+
   /account/reset_password:
     post:
       tags:
@@ -95,7 +143,30 @@ paths:
       responses:
         200:
           description: OK
-          
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Enter a valid email address."
+              key:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Неправильный ключ"
+              new_password:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Введите пароль, который не использовали ранее"
+
   /account/reset_email_key:
     post:
       tags:
@@ -114,7 +185,13 @@ paths:
       responses:
         200:
           description: OK
-          
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            $ref: '#/definitions/EmailError'
+        429:
+          description: "Запрос можно отправлять не чаще 1 раза в минуту"
+
   /account/reset_email:
     post:
       tags:
@@ -137,7 +214,30 @@ paths:
       responses:
         200:
           description: OK
-          
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Enter a valid email address."
+              key:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Неправильный ключ"
+              new_password:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Пользователь с таким email уже существует"
+
   /account/confirm_key:
     post:
       tags:
@@ -156,7 +256,13 @@ paths:
       responses:
         200:
           description: OK
-          
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            $ref: '#/definitions/EmailError'
+        429:
+          description: "Запрос можно отправлять не чаще 1 раза в минуту"
+
   /account/confirm:
     post:
       tags:
@@ -177,24 +283,79 @@ paths:
       responses:
         200:
           description: OK
-          
+        400:
+          description: "Ошибка во входных данных"
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Enter a valid email address."
+              key:
+                type: "array"
+                items:
+                  type: "string"
+                  enum:
+                  - "Срок действия ключа истек"
+
   /account/info:
     post:
       tags:
       - "Account"
       summary: "Информация о пользователе"
-      description: "" 
+      description: ""
       responses:
         200:
           description: OK
-          
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              confirmed:
+                type: "boolean"
+              is_superuser:
+                type: "boolean"
+              date_joined:
+                type: "string"
+              email:
+                type: "string"
+        401:
+          description: "Authentication credentials were not provided."
+
   /account/admin_stat:
     get:
       tags:
       - "Account"
       summary: "Статистика о кол-ве регистраций"
-      description: "" 
+      description: ""
       responses:
         200:
           description: OK
-    
+          schema:
+            type: "object"
+            properties:
+              count:
+                type: "integer"
+              today:
+                type: "integer"
+        401:
+          description: "Authentication credentials were not provided."
+        403:
+          description: "Доступ только администраторам"
+
+definitions:
+  EmailError:
+    type: "object"
+    properties:
+      email:
+        type: "array"
+        items:
+          type: "string"
+          enum:
+          - "Enter a valid email address."
+
+
